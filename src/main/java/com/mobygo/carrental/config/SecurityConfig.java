@@ -37,7 +37,9 @@ public class SecurityConfig {
             .cors(cors -> {})
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public read-only endpoints
+                // Static frontend files
+                .requestMatchers("/", "/*.html", "/css/**", "/js/**", "/images/**").permitAll()
+                // Public API endpoints
                 .requestMatchers("/api/", "/api/rates").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cars/**", "/api/locations/**").permitAll()
                 // Swagger UI & OpenAPI docs
