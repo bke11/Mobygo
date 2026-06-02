@@ -20,10 +20,10 @@ public class RentalRequest {
     public void setCarId(Long carId) { this.carId = carId; }
 
     public Long getPickupLocationId() { return pickupLocationId; }
-    public void setPickupLocationId(Long v) { this.pickupLocationId = v; }
+    public void setPickupLocationId(Long pickupLocationId) { this.pickupLocationId = pickupLocationId; }
 
     public Long getDropoffLocationId() { return dropoffLocationId; }
-    public void setDropoffLocationId(Long v) { this.dropoffLocationId = v; }
+    public void setDropoffLocationId(Long dropoffLocationId) { this.dropoffLocationId = dropoffLocationId; }
 
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
