@@ -18,12 +18,14 @@ public class RentalController {
     private RentalService rentalService;
 
     @PostMapping
-    @Operation(summary = "Create a new rental (checks availability + calculates price)")
+    @Operation(summary = "Create a rental — guest (name+email) or registered user (userId)")
     public ResponseEntity<Rental> createRental(@RequestBody RentalRequest request) {
         Rental rental = rentalService.createRental(
             request.getCarId(),
             request.getPickupLocationId(),
             request.getDropoffLocationId(),
+            request.getCustomerName(),
+            request.getCustomerEmail(),
             request.getUserId(),
             request.getStartDate(),
             request.getEndDate()

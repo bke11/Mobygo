@@ -11,9 +11,14 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Optional: set when booked by a registered user
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
+
+    // Used for guest bookings (no account required)
+    private String customerName;
+    private String customerEmail;
 
     @ManyToOne
     @JoinColumn(name = "car_id")
@@ -38,6 +43,12 @@ public class Rental {
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public String getCustomerName() { return customerName; }
+    public void setCustomerName(String customerName) { this.customerName = customerName; }
+
+    public String getCustomerEmail() { return customerEmail; }
+    public void setCustomerEmail(String customerEmail) { this.customerEmail = customerEmail; }
 
     public Car getCar() { return car; }
     public void setCar(Car car) { this.car = car; }

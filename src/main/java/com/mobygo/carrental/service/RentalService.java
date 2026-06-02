@@ -29,7 +29,8 @@ public class RentalService {
     @Autowired private UserRepository userRepository;
 
     public Rental createRental(Long carId, Long pickupLocationId, Long dropoffLocationId,
-                               Long userId, LocalDate startDate, LocalDate endDate) {
+                               String customerName, String customerEmail, Long userId,
+                               LocalDate startDate, LocalDate endDate) {
 
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start date and end date are required");
@@ -39,6 +40,9 @@ public class RentalService {
         }
         if (startDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Start date cannot be in the past");
+        }
+        if ((customerName == null || customerName.isBlank()) && userId == null) {
+            throw new IllegalArgumentException("Customer name is required");
         }
 
         Car car = carRepository.findById(carId)
@@ -57,8 +61,6 @@ public class RentalService {
             .orElseThrow(() -> new ResourceNotFoundException("Pickup location", pickupLocationId));
         Location dropoff = locationRepository.findById(dropoffLocationId)
             .orElseThrow(() -> new ResourceNotFoundException("Dropoff location", dropoffLocationId));
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User", userId));
 
         // Business rule: calculate total price = daily rate × number of days
         long days = ChronoUnit.DAYS.between(startDate, endDate);
@@ -69,10 +71,17 @@ public class RentalService {
         rental.setCar(car);
         rental.setPickupLocation(pickup);
         rental.setDropoffLocation(dropoff);
-        rental.setUser(user);
         rental.setStartDate(startDate);
         rental.setEndDate(endDate);
         rental.setTotalPrice(totalPrice);
+
+        // Attach user if provided, otherwise store guest info
+        if (userId != null) {
+            userRepository.findById(userId).ifPresent(rental::setUser);
+        } else {
+            rental.setCustomerName(customerName);
+            rental.setCustomerEmail(customerEmail);
+        }
 
         return rentalRepository.save(rental);
     }

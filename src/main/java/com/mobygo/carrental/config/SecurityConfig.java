@@ -42,6 +42,7 @@ public class SecurityConfig {
                 // Public API endpoints
                 .requestMatchers("/api/", "/api/rates").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cars/**", "/api/locations/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/rentals").permitAll()
                 // Swagger UI & OpenAPI docs
                 .requestMatchers(
                     "/swagger-ui/**", "/swagger-ui.html",
