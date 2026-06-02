@@ -1,5 +1,7 @@
 package com.mobygo.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,15 +21,11 @@ public class User implements UserDetails {
     private String username;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false)
-    private String role; // "USER" or "ADMIN"
-
-    private boolean accountNonExpired = true;
-    private boolean accountNonLocked = true;
-    private boolean credentialsNonExpired = true;
-    private boolean enabled = true;
+    private String role;
 
     public User() {}
 
@@ -38,16 +36,18 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
     }
 
     @Override public String getPassword() { return password; }
     @Override public String getUsername() { return username; }
-    @Override public boolean isAccountNonExpired() { return accountNonExpired; }
-    @Override public boolean isAccountNonLocked() { return accountNonLocked; }
-    @Override public boolean isCredentialsNonExpired() { return credentialsNonExpired; }
-    @Override public boolean isEnabled() { return enabled; }
+
+    @Override @JsonIgnore public boolean isAccountNonExpired()     { return true; }
+    @Override @JsonIgnore public boolean isAccountNonLocked()      { return true; }
+    @Override @JsonIgnore public boolean isCredentialsNonExpired() { return true; }
+    @Override @JsonIgnore public boolean isEnabled()               { return true; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -55,8 +55,4 @@ public class User implements UserDetails {
     public void setPassword(String password) { this.password = password; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-    public void setAccountNonExpired(boolean v) { this.accountNonExpired = v; }
-    public void setAccountNonLocked(boolean v) { this.accountNonLocked = v; }
-    public void setCredentialsNonExpired(boolean v) { this.credentialsNonExpired = v; }
-    public void setEnabled(boolean v) { this.enabled = v; }
 }
